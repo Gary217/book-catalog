@@ -10,9 +10,6 @@ export function renderHeader() {
   const header = document.querySelector("header");
   if (!header) return console.error("Header element not found in HTML");
 
-  // Clear previous content just in case.
-  header.textContent = "";
-
   // 1. Create the title
   const titleStrong = createElement("strong", {
     textContent: "The Library",
@@ -55,8 +52,9 @@ export function renderHeader() {
     children: [themeImg],
   });
 
-  // 8. Put everything into the <header> tag.
-  header.append(brandLink, themeBtn);
+  // 8. Clear previous content and safely insert new elements
+  // faster than header.innerHTML = "" & header.append(brandLink, themeBtn)
+  header.replaceChildren(brandLink, themeBtn);
 
   console.log("Header rendered successfully");
 }
