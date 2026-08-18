@@ -2,7 +2,7 @@
 import styles from "./styles/base.css?inline";
 import { injectStyles } from "./utils/dom.js";
 import { renderHeader } from "./components/header.js";
-import { renderMain } from "./components/main.js";
+import { renderMain } from "./components/main/index.js";
 
 injectStyles(styles);
 
