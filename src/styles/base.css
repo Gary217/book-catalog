@@ -196,7 +196,7 @@ img {
   padding: 0 1rem 2.2rem;
 }
 
-.books-grid {
+.results-area {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1rem;
@@ -211,7 +211,8 @@ img {
   box-shadow: 0 8px 18px rgba(40, 48, 42, 0.08);
 }
 
-.book-cover/* , .cover-fallback */ {
+.book-cover,
+.cover-fallback {
   width: 100%;
   aspect-ratio: 0.72;
   background: var(--shadow);
@@ -292,6 +293,13 @@ img {
   gap: 0;
 }
 
+.empty-favorites {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  color: var(--text);
+  font-size: 0.65rem;
+}
+
 .favorite-item {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr) 18px;
@@ -335,4 +343,36 @@ img {
   border-radius: 50%;
   color: var(--red);
   font-size: 0.86rem;
+}
+
+.loading,
+.empty-message,
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.error-container p {
+  color: var(--red);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.error-container button {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid var(--red);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--red);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.error-container button:hover {
+  background: var(--red);
+  color: var(--white);
 }

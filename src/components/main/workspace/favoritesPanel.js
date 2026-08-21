@@ -1,20 +1,6 @@
-import { createElement } from "../../utils/dom";
+import { createElement } from "../../../utils/dom";
 
-export function renderWorkspace() {
-  // --- RESULTS AREA section ---
-
-  const booksGrid = createElement("div", {
-    className: "books-grid",
-    attributes: { id: "books-grid" },
-  });
-
-  const resultsArea = createElement("div", {
-    className: "results-area",
-    children: [booksGrid],
-  });
-
-  // --- FAVORITES PANEL section ---
-
+export function createFavoritesPanel() {
   const favoritesIcon = createElement("span", {
     className: "favorites-icon",
     textContent: "♡",
@@ -50,19 +36,19 @@ export function renderWorkspace() {
     children: [favoritesTitleContainer],
   });
 
+  const emptyFavorites = createElement("div", {
+    className: "empty-favorites",
+    textContent: "Saved books will appear here.",
+  });
+
   const favoritesList = createElement("div", {
     className: "favorites-list",
     attributes: { id: "favorites-list" },
+    children: [emptyFavorites],
   });
 
-  const favoritesPanel = createElement("aside", {
+  return createElement("aside", {
     className: "favorites-panel",
     children: [panelHead, favoritesList],
-  });
-
-  // const workspaceSection =
-  return createElement("section", {
-    className: "workspace",
-    children: [resultsArea, favoritesPanel],
   });
 }

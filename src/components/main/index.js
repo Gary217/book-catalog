@@ -1,4 +1,4 @@
-import { renderSearchBand } from "./search-band";
+import { renderSearchBand } from "./searchBand";
 import { renderWorkspace } from "./workspace";
 
 export function renderMain() {
