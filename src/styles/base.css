@@ -17,6 +17,27 @@
   --favorite: #eaf0ed;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --white: #111315;
+  --green: #5ec29b;
+  --yellow: #f2c75c;
+  --red: #ff7a7a;
+  --brown: #e7ddd3;
+  --black: #f4f1ee;
+
+  --title: #f4f1ee;
+  --text: #b9b0a8;
+  --border: #2d2a29;
+
+  --background: #121212;
+  --card: #1d1d1f;
+  --secondary: #1a1a1b;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --favorite: #1e2d29;
+}
+
 * {
   font-family: "Source Sans 3", sans-serif;
   margin: 0;
@@ -97,7 +118,7 @@ header {
   display: flex;
   align-items: center;
   border: 1px solid var(--border);
-  background: var(--background);
+  background: white;
   justify-content: center;
   margin-bottom: 0.4rem;
 }

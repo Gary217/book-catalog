@@ -1,4 +1,5 @@
 import { createElement } from "../utils/dom";
+import { applyTheme, getStoredTheme, toggleTheme } from "../utils/themes.js";
 
 // Get icon URLs using Vite path helper.
 const bookOpenUrl = new URL("../assets/icons/book-open.svg", import.meta.url)
@@ -9,6 +10,9 @@ const sunMoonUrl = new URL("../assets/icons/sun-moon.svg", import.meta.url)
 export function renderHeader() {
   const header = document.querySelector("header");
   if (!header) return console.error("Header element not found in HTML");
+
+  const initialTheme = getStoredTheme();
+  applyTheme(initialTheme);
 
   // 1. Create the title
   const titleStrong = createElement("strong", {
@@ -48,8 +52,13 @@ export function renderHeader() {
   // 7. Create the theme button and put the icon inside.
   const themeBtn = createElement("button", {
     className: "theme-toggle",
-    attributes: { type: "button" },
+    attributes: { type: "button", "aria-label": "Toggle color theme" },
     children: [themeImg],
+  });
+
+  // Toggle theme on button click
+  themeBtn.addEventListener("click", () => {
+    toggleTheme();
   });
 
   // 8. Clear previous content and safely insert new elements
