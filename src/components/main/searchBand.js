@@ -1,14 +1,15 @@
+import { getDefaultBooksInfo } from "../../api/openLibrary";
 import { searchBooks } from "../../services/books";
-import { renderEmptyState } from "../../states/emptyState";
 import { renderErrorState } from "../../states/errorState";
 import { renderLoadingState } from "../../states/loadingState";
+import { debounce } from "../../utils/debounce";
 import { createElement } from "../../utils/dom";
-import { createBookCard } from "./workspace/bookCard";
+import { renderBooks } from "./workspace/resultsArea";
 
 const searchUrl = new URL("../../assets/icons/search.svg", import.meta.url)
   .href;
 
-// Create HTML:
+// 1. Create HTML:
 export function renderSearchBand() {
   const searchTitle = createElement("h1", {
     textContent: "Discover Your Next Great Read",
@@ -67,8 +68,47 @@ export function renderSearchBand() {
   });
 }
 
-// Search logic:
-export function initSearch() {
+let currentSearchId = 0;
+
+// Run a search and render the result
+async function executeSearch(query, resultsArea) {
+  const searchId = ++currentSearchId;
+  const trimmedQuery = query.trim();
+
+  // Wait for at least 2 characters
+  if (trimmedQuery && trimmedQuery.length <= 2) {
+    return;
+  }
+
+  try {
+    // Show loading state
+    renderLoadingState(resultsArea);
+
+    // Search books or Load default books for an empty query
+    const books = trimmedQuery
+      ? await searchBooks(query)
+      : await getDefaultBooksInfo();
+
+    // Ignore the response if a newer search has started.
+    if (searchId !== currentSearchId) {
+      return;
+    }
+
+    renderBooks(books, resultsArea);
+    console.log(`Search for "${query}" rendered successfully`);
+  } catch (error) {
+    // Ignore errors from old searches
+    if (searchId !== currentSearchId) {
+      return;
+    }
+
+    console.error("Search failed:", error);
+    renderErrorState(error.message);
+  }
+}
+
+// 2. Initialize search logic after rendering HTML
+export function initSearchLogic() {
   const searchForm = document.getElementById("search-form");
   const searchInput = document.getElementById("search-input");
   const resultsArea = document.querySelector(".results-area");
@@ -78,36 +118,20 @@ export function initSearch() {
     return console.error("Search components not found in DOM");
   }
 
+  // Scenario A: Search on form submit
   searchForm.addEventListener("submit", async (event) => {
     // Prevent default button behavior
     event.preventDefault();
 
-    const query = searchInput.value.trim();
+    executeSearch(searchInput.value, resultsArea);
+  });
 
-    // Return early if query is empty
-    if (!query) return;
+  // Scenario B: Search while typing
+  const debouncedSearch = debounce((query) => {
+    executeSearch(query, resultsArea);
+  }, 500);
 
-    try {
-      // Show loading state
-      renderLoadingState(resultsArea);
-
-      // Fetch books from API
-      const books = await searchBooks(query);
-
-      // Render books or show empty state
-      if (books.length === 0) {
-        renderEmptyState(resultsArea);
-      } else {
-        resultsArea.replaceChildren();
-        books.forEach((book) => {
-          resultsArea.append(createBookCard(book));
-        });
-      }
-
-      console.log(`Search for "${query}" rendered successfully`);
-    } catch (error) {
-      console.error("Search failed:", error);
-      renderErrorState(error.message);
-    }
+  searchInput.addEventListener("input", (event) => {
+    debouncedSearch(event.target.value);
   });
 }

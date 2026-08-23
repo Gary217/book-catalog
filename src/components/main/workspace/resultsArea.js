@@ -12,6 +12,15 @@ export function createResultsContainer() {
   });
 }
 
+export function renderBooks(books, resultsArea) {
+  if (!books || books.length === 0) {
+    renderEmptyState(resultsArea);
+    return;
+  }
+
+  resultsArea.replaceChildren(...books.map((book) => createBookCard(book)));
+}
+
 export async function renderResultsArea() {
   const resultsArea = document.querySelector(".results-area");
   if (!resultsArea) {
@@ -24,18 +33,7 @@ export async function renderResultsArea() {
     // Wait for books array from getDefaultBooksInfo()
     const books = await getDefaultBooksInfo();
 
-    if (!books || books.length === 0) {
-      renderEmptyState(resultsArea);
-      return;
-    }
-
-    // Clear container before adding new cards
-    resultsArea.replaceChildren();
-
-    // Loop through each book of array
-    books.forEach((book) => {
-      resultsArea.append(createBookCard(book));
-    });
+    renderBooks(books, resultsArea);
 
     console.log("'.results-area' rendered successfully");
   } catch (error) {

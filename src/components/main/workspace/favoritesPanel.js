@@ -1,6 +1,6 @@
 import { createElement } from "../../../utils/dom";
 
-export function createFavoritesPanel() {
+export function renderFavoritesPanel() {
   const favoritesIcon = createElement("span", {
     className: "favorites-icon",
     textContent: "♡",
