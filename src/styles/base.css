@@ -188,18 +188,26 @@ img {
 }
 
 .workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 190px;
+  display: flex;
   gap: 1rem;
-  max-width: 1120px;
   margin: 0 auto;
   padding: 0 1rem 2.2rem;
+  /* flex-wrap: wrap; */
+  justify-content: center;
+}
+
+@media (max-width: 470px) {
+  .workspace {
+    flex-wrap: wrap;
+  }
 }
 
 .results-area {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+  max-width: 880px;
+  justify-content: center;
 }
 
 .book-card {
@@ -209,6 +217,7 @@ img {
   overflow: hidden;
   background: var(--card);
   box-shadow: 0 8px 18px rgba(40, 48, 42, 0.08);
+  width: 160px;
 }
 
 .book-cover,
@@ -249,6 +258,7 @@ img {
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   background: var(--secondary);
+  min-width: 190px;
 }
 
 .panel-head {

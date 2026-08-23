@@ -40,7 +40,7 @@ export function renderSearchBand() {
     attributes: {
       id: "search-input",
       type: "search",
-      placeholder: "Search for books by title or author...",
+      placeholder: "Search for books...",
       autocomplete: "off",
     },
   });
