@@ -1,7 +1,7 @@
 import { getBookCoverUrl } from "../../../api/openLibrary.js";
 import { createElement } from "../../../utils/dom.js";
 
-export function createBookCard(book) {
+export function createBookCard(book, onFavoriteClick, isFavorited = false) {
   // Destructure book properties
   const {
     title,
@@ -33,10 +33,15 @@ export function createBookCard(book) {
   });
 
   const favoriteButton = createElement("button", {
-    className: "icon-button favorite-button",
-    textContent: "♡",
-    attributes: { type: "button", "data-favorite-key": key },
+    className: `icon-button favorite-button ${isFavorited ? "is-favorited" : ""}`,
+    textContent: isFavorited ? "♥" : "♡",
+    attributes: { type: "button" },
   });
+
+  // Attach click listener after element creation (createElement doesn't map function attributes)
+  if (typeof onFavoriteClick === "function") {
+    favoriteButton.addEventListener("click", () => onFavoriteClick(book));
+  }
 
   const bookCover = coverUrl
     ? // Create img element if cover exists
@@ -53,6 +58,9 @@ export function createBookCard(book) {
   // const bookCard =
   return createElement("article", {
     className: "book-card",
+    attributes: {
+      "data-book-key": key,
+    },
     children: [bookCover, favoriteButton, bookTitle, bookAuthor, bookYear],
   });
 }

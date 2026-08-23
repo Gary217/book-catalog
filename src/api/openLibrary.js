@@ -18,7 +18,7 @@ export async function getDefaultBooksInfo() {
     if (!data.docs || data.docs.length === 0) {
       throw new Error("No books found");
     }
-
+    console.log(data.docs);
     return data.docs;
   } catch (error) {
     // Code jumps here if:
