@@ -1,6 +1,7 @@
 import { createElement } from "../../../utils/dom";
-import { createResultsContainer, renderResultsArea } from "./resultsArea";
+import { createResultsContainer } from "./resultsArea";
 import { renderFavoritesPanel } from "./favoritesPanel";
+import { loadInitialBooks } from "../searchBand";
 
 export function renderWorkspace() {
   const resultsArea = createResultsContainer();
@@ -13,5 +14,5 @@ export function renderWorkspace() {
 }
 
 export function initWorkspaceLogic() {
-  renderResultsArea();
+  loadInitialBooks();
 }

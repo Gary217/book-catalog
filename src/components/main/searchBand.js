@@ -9,6 +9,11 @@ import { renderBooks } from "./workspace/resultsArea";
 const searchUrl = new URL("../../assets/icons/search.svg", import.meta.url)
   .href;
 
+let currentSearchId = 0;
+
+// Store books from the current search
+let currentBooks = [];
+
 // 1. Create HTML:
 export function renderSearchBand() {
   const searchTitle = createElement("h1", {
@@ -58,7 +63,7 @@ export function renderSearchBand() {
 
   const searchContent = createElement("div", {
     className: "search-content",
-    children: [searchTitle, searchSubtitle, searchForm],
+    children: [searchTitle, searchSubtitle, searchForm, authorFilterContainer],
   });
 
   // const searchBandSection =
@@ -67,8 +72,6 @@ export function renderSearchBand() {
     children: [searchContent],
   });
 }
-
-let currentSearchId = 0;
 
 // Run a search and render the result
 async function executeSearch(query, resultsArea) {
@@ -94,6 +97,12 @@ async function executeSearch(query, resultsArea) {
       return;
     }
 
+    // Save current books for author filtering
+    currentBooks = books;
+
+    // Update the author list
+    updateAuthorFilter(books);
+
     renderBooks(books, resultsArea);
     console.log(`Search for "${query}" rendered successfully`);
   } catch (error) {
@@ -112,11 +121,26 @@ export function initSearchLogic() {
   const searchForm = document.getElementById("search-form");
   const searchInput = document.getElementById("search-input");
   const resultsArea = document.querySelector(".results-area");
+  const authorFilter = document.getElementById("author-filter");
 
   // Check that all required elements exist in DOM
-  if (!searchForm || !searchInput || !resultsArea) {
+  if (!searchForm || !searchInput || !resultsArea || !authorFilter) {
     return console.error("Search components not found in DOM");
   }
+
+  // Filter books when the selected author changes
+  authorFilter.addEventListener("change", (event) => {
+    const selectedAuthor = event.target.value;
+
+    // Show books only by the selected author
+    const filteredBooks = selectedAuthor
+      ? currentBooks.filter((book) =>
+          book.author_name?.includes(selectedAuthor),
+        )
+      : currentBooks;
+
+    renderBooks(filteredBooks, resultsArea);
+  });
 
   // Scenario A: Search on form submit
   searchForm.addEventListener("submit", (event) => {
@@ -138,4 +162,75 @@ export function initSearchLogic() {
   searchInput.addEventListener("input", (event) => {
     debouncedSearch(event.target.value);
   });
+}
+
+// Create label for the author filter
+const authorFilterLabel = createElement("label", {
+  textContent: "Filter by author:",
+  attributes: {
+    for: "author-filter",
+  },
+});
+
+// Create author filter
+const authorFilter = createElement("select", {
+  attributes: {
+    id: "author-filter",
+    name: "author",
+  },
+  children: [
+    createElement("option", {
+      textContent: "All authors",
+      attributes: {
+        value: "",
+      },
+    }),
+  ],
+});
+
+// Create author filter container
+const authorFilterContainer = createElement("div", {
+  className: "author-filter",
+  children: [authorFilterLabel, authorFilter],
+});
+
+// Update the list of authors
+function updateAuthorFilter(books) {
+  const authorFilter = document.getElementById("author-filter");
+
+  if (!authorFilter) return;
+
+  // Get unique authors and sort them
+  const authors = [
+    ...new Set(books.flatMap((book) => book.author_name || [])),
+  ].sort();
+
+  // Add authors to the filter
+  authorFilter.replaceChildren(
+    createElement("option", {
+      textContent: "All authors",
+      attributes: {
+        value: "",
+      },
+    }),
+    ...authors.map((author) =>
+      createElement("option", {
+        textContent: author,
+        attributes: {
+          value: author,
+        },
+      }),
+    ),
+  );
+}
+
+// Load default books when the app starts
+export async function loadInitialBooks() {
+  const resultsArea = document.querySelector(".results-area");
+
+  if (!resultsArea) {
+    return console.error("Results area not found in DOM");
+  }
+
+  await executeSearch("", resultsArea);
 }
