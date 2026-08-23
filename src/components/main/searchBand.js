@@ -1,8 +1,14 @@
+import { searchBooks } from "../../services/books";
+import { renderEmptyState } from "../../states/emptyState";
+import { renderErrorState } from "../../states/errorState";
+import { renderLoadingState } from "../../states/loadingState";
 import { createElement } from "../../utils/dom";
+import { createBookCard } from "./workspace/bookCard";
 
 const searchUrl = new URL("../../assets/icons/search.svg", import.meta.url)
   .href;
 
+// Create HTML:
 export function renderSearchBand() {
   const searchTitle = createElement("h1", {
     textContent: "Discover Your Next Great Read",
@@ -58,5 +64,50 @@ export function renderSearchBand() {
   return createElement("section", {
     className: "search-band",
     children: [searchContent],
+  });
+}
+
+// Search logic:
+export function initSearch() {
+  const searchForm = document.getElementById("search-form");
+  const searchInput = document.getElementById("search-input");
+  const resultsArea = document.querySelector(".results-area");
+
+  // Check that all required elements exist in DOM
+  if (!searchForm || !searchInput || !resultsArea) {
+    return console.error("Search components not found in DOM");
+  }
+
+  searchForm.addEventListener("submit", async (event) => {
+    // Prevent default button behavior
+    event.preventDefault();
+
+    const query = searchInput.value.trim();
+
+    // Return early if query is empty
+    if (!query) return;
+
+    try {
+      // Show loading state
+      renderLoadingState(resultsArea);
+
+      // Fetch books from API
+      const books = await searchBooks(query);
+
+      // Render books or show empty state
+      if (books.length === 0) {
+        renderEmptyState(resultsArea);
+      } else {
+        resultsArea.replaceChildren();
+        books.forEach((book) => {
+          resultsArea.append(createBookCard(book));
+        });
+      }
+
+      console.log(`Search for "${query}" rendered successfully`);
+    } catch (error) {
+      console.error("Search failed:", error);
+      renderErrorState(error.message);
+    }
   });
 }

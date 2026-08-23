@@ -2,8 +2,8 @@ import { createBookCard } from "./bookCard.js";
 import { renderErrorState } from "../../../states/errorState.js";
 import { renderLoadingState } from "../../../states/loadingState.js";
 import { renderEmptyState } from "../../../states/emptyState.js";
-import { initBooksInfo } from "../../../services/books.js";
 import { createElement } from "../../../utils/dom";
+import { getDefaultBooksInfo } from "../../../api/openLibrary.js";
 
 // Create results container element used in workspace
 export function createResultsContainer() {
@@ -21,8 +21,8 @@ export async function renderResultsArea() {
   try {
     renderLoadingState(resultsArea);
 
-    // Wait for books array from initBooksInfo()
-    const books = await initBooksInfo();
+    // Wait for books array from getDefaultBooksInfo()
+    const books = await getDefaultBooksInfo();
 
     if (!books || books.length === 0) {
       renderEmptyState(resultsArea);

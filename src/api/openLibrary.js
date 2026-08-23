@@ -37,3 +37,29 @@ export async function getDefaultBooksInfo() {
 export function getBookCoverUrl(coverId) {
   return !coverId ? null : `https://covers.openlibrary.org/b/id/${coverId}.jpg`;
 }
+
+export async function getBooksByQuery(query) {
+  // encodeURIComponent converts spaces and special characters into a safe URL format
+  const url = `${BASE_URL}/search.json?q=${encodeURIComponent(query)}&limit=10`;
+
+  console.log(`Searching for: ${query}`);
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.docs || data.docs.length === 0) {
+      throw new Error("No books found for this search");
+    }
+
+    return data.docs;
+  } catch (error) {
+    console.error("Error inside getBooksByQuery:", error.message);
+    throw error;
+  }
+}
