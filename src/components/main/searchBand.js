@@ -119,9 +119,13 @@ export function initSearchLogic() {
   }
 
   // Scenario A: Search on form submit
-  searchForm.addEventListener("submit", async (event) => {
+  searchForm.addEventListener("submit", (event) => {
     // Prevent default button behavior
     event.preventDefault();
+
+    if (!searchInput.value.trim()) {
+      return alert("Please enter a search term!");
+    }
 
     executeSearch(searchInput.value, resultsArea);
   });
