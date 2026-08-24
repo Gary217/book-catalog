@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  base: "/book-catalog/",
   build: {
     // Put all CSS in one place (do not split it).
     cssCodeSplit: false,
