@@ -26,6 +26,14 @@ Create an optimized production build:
 npm run build
 ```
 
+### Deployment
+
+Deploy the application to GitHub Pages:
+
+```bash
+npm run deploy
+```
+
 ## Project structure
 
 ### api/
