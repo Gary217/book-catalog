@@ -1,0 +1,57 @@
+.results-area {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  max-width: 880px;
+  justify-content: center;
+}
+
+.book-card {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--card);
+  box-shadow: 0 8px 18px rgba(40, 48, 42, 0.08);
+  width: 160px;
+}
+
+.book-cover,
+.cover-fallback {
+  width: 100%;
+  aspect-ratio: 0.72;
+  background: var(--shadow);
+}
+
+.favorite-button {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  color: var(--red);
+  font-size: 0.82rem;
+}
+
+.book-card h3 {
+  margin: 0.8rem 0.8rem 0.25rem;
+  font-size: 0.86rem;
+}
+
+.book-author,
+.book-year {
+  margin: 0;
+  padding: 0 0.8rem;
+  color: var(--text);
+  font-size: 0.74rem;
+}
+
+.cover-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  text-align: center;
+  font-weight: 800;
+}
