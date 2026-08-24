@@ -39,7 +39,7 @@ export function renderHeader() {
   // 5. Create the link logo (<a>) and put image + text container inside.
   const brandLink = createElement("a", {
     className: "brand",
-    attributes: { href: "/" },
+    attributes: { href: import.meta.env.BASE_URL }, // Automatically sets the correct path
     children: [brandImg, brandText],
   });
 
